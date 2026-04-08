@@ -14,7 +14,13 @@
         <%= for file <- @cov.files do %>
           <%= if not @filter_full_covered or file.coverage < 100 do %>
             <li>
-              <span class='cov <%= ExCoveralls.Html.View.coverage_class(file.coverage, file.sloc) %>'><%= file.coverage || 0 %></span>
+              <span class='cov <%= ExCoveralls.Html.View.coverage_class(file.coverage, file.sloc) %>'><%= 
+                case file.coverage do
+                  100.0 -> 100
+                  nil -> 0
+                  cov -> cov
+                end
+              %></span>
               <a href='#<%= file.filename %>'>
                 <% parts = String.split(file.filename, "/") %><% [b | s] = parts |> Enum.reverse |> Enum.reverse_slice(1, Enum.count(parts)) %>
                 <%= if Enum.count(s) do %>
